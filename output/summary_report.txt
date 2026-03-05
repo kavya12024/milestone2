@@ -1,0 +1,17 @@
+Spotify Playlist Analysis Report
+---------------------------------
+
+Total Tracks: 20
+Average Duration (minutes): 3.00
+
+Top 5 Most Popular Tracks:
+                                                                track_name  popularity
+sunt aut facere repellat provident occaecati excepturi optio reprehenderit          50
+                                                              qui est esse          50
+               ea molestias quasi exercitationem repellat qui ipsa sit aut          50
+                                                      eum et est occaecati          50
+                                                        nesciunt quas odio          50
+
+Tracks per Artist:
+artist_name
+Demo Artist    20
