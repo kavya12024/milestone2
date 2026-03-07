@@ -6,10 +6,11 @@ import os
 from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 
+os.makedirs("/opt/airflow/output", exist_ok=True)
 
-RAW_FILE = "/opt/airflow/output/data/playlist_raw.csv"
-TRANSFORM_FILE = "/opt/airflow/output/data/playlist_transformed.csv"
-SUMMARY_FILE = "/opt/airflow/output/data/summary_report.txt"
+RAW_FILE = "/opt/airflow/output/playlist_raw.csv"
+TRANSFORM_FILE = "/opt/airflow/output/playlist_transformed.csv"
+SUMMARY_FILE = "/opt/airflow/output/summary_report.txt"
 
 
 # -----------------------------
@@ -17,27 +18,17 @@ SUMMARY_FILE = "/opt/airflow/output/data/summary_report.txt"
 # -----------------------------
 def fetch_playlist():
 
-    url = "https://jsonplaceholder.typicode.com/posts"
+    url = "https://raw.githubusercontent.com/rushi4git/spotify-playlist-data/main/spotify_playlist.json"
+
     response = requests.get(url)
 
-    data = response.json()[:20]
+    data = response.json()
 
-    records = []
-
-    for item in data:
-
-        records.append({
-            "track_name": item["title"],
-            "artist_name": "Demo Artist",
-            "album_name": "Demo Album",
-            "popularity": 50,
-            "duration_ms": 180000,
-            "release_date": "2020-01-01"
-        })
-
-    df = pd.DataFrame(records)
+    df = pd.DataFrame(data["tracks"])
 
     df.to_csv(RAW_FILE, index=False)
+
+    print("Raw playlist saved")
 
 
 # -----------------------------
@@ -51,7 +42,6 @@ def transform_playlist():
     df["release_year"] = df["release_date"].astype(str).str[:4]
 
     def category(pop):
-
         if pop <= 40:
             return "Low"
         elif pop <= 70:
@@ -64,6 +54,8 @@ def transform_playlist():
     df = df.drop_duplicates()
 
     df.to_csv(TRANSFORM_FILE, index=False)
+
+    print("Transformed file created")
 
 
 # -----------------------------
